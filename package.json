@@ -1,0 +1,36 @@
+{
+  "name": "formgroup-webcomponent",
+  "version": "1.0.0",
+  "description": "A lightweight, accessible web component for enhanced HTML5 form validation with custom error messaging",
+  "main": "index.js",
+  "module": "index.js",
+  "type": "module",
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "npx http-server -p 8080 -o",
+    "test": "echo \"Open index.html in a browser to test\" && npm start"
+  },
+  "keywords": [
+    "web-component",
+    "form-validation",
+    "html5",
+    "custom-element",
+    "accessibility",
+    "a11y",
+    "form",
+    "validation",
+    "error-messages",
+    "progressive-enhancement"
+  ],
+  "author": "Krishna Kumar",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

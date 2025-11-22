@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FormGroup Component - Demo & Tests</title>
+    <link rel="stylesheet" href="css/style.css"/>  
+  </head>
+  <body>
+    <h1>FormGroup Web Component - Demo</h1>
+    <div class="info-box">
+      <strong>About:</strong> This page demonstrates the FormGroup custom
+      element with various HTML5 validation scenarios. Try submitting forms,
+      leaving fields blank, or entering invalid data to see the validation in
+      action.
+      action.
+    </div>
+
+    <!-- Basic Validation Examples -->
+    <div class="demo-section">
+      <h2>1. Basic Validation Examples</h2>
+      <form id="basic-form">
+        <div class="grid">
+          <form-group value-missing-message="Please enter your name">
+            <label for="name">Name (Required)</label>
+            <input type="text" id="name" name="name" required />
+          </form-group>
+
+          <form-group
+            value-missing-message="Email is required"
+            type-mismatch-message="Please enter a valid email address"
+          >
+            <label for="email">Email (Required)</label>
+            <input type="email" id="email" name="email" required />
+          </form-group>
+
+          <form-group
+            value-missing-message="Phone number is required"
+            pattern-mismatch-message="Please enter a valid phone number (e.g., 123-456-7890)"
+          >
+            <label for="phone">Phone (Pattern: XXX-XXX-XXXX)</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+              required
+            />
+          </form-group>
+
+          <form-group value-missing-message="Please select a country">
+            <label for="country">Country (Required)</label>
+            <select id="country" name="country" required>
+              <option value="">-- Select a country --</option>
+              <option value="us">United States</option>
+              <option value="uk">United Kingdom</option>
+              <option value="ca">Canada</option>
+              <option value="au">Australia</option>
+            </select>
+          </form-group>
+        </div>
+
+        <button type="submit">Submit Form</button>
+        <button type="reset">Reset</button>
+      </form>
+      <div class="success-box" id="basic-success">
+        ✓ Form submitted successfully!
+      </div>
+    </div>
+
+    <!-- Length Validation -->
+    <div class="demo-section">
+      <h2>2. Length Validation (minlength/maxlength)</h2>
+      <form id="length-form">
+        <form-group
+          too-short-message="Username must be at least 3 characters"
+          too-long-message="Username cannot exceed 20 characters"
+          value-missing-message="Username is required"
+        >
+          <label for="username">Username (3-20 characters)</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            minlength="3"
+            maxlength="20"
+            required
+          />
+        </form-group>
+
+        <form-group
+          too-short-message="Bio must be at least 10 characters"
+          too-long-message="Bio cannot exceed 200 characters"
+        >
+          <label for="bio">Bio (10-200 characters, optional)</label>
+          <textarea
+            id="bio"
+            name="bio"
+            minlength="10"
+            maxlength="200"
+            rows="4"
+          ></textarea>
+        </form-group>
+
+        <button type="submit">Submit</button>
+      </form>
+      <div class="success-box" id="length-success">
+        ✓ Form submitted successfully!
+      </div>
+    </div>
+
+    <!-- Number Range Validation -->
+    <div class="demo-section">
+      <h2>3. Number Range Validation (min/max/step)</h2>
+      <form id="number-form">
+        <div class="grid">
+          <form-group
+            range-underflow-message="Age must be at least 18"
+            range-overflow-message="Age cannot exceed 120"
+            value-missing-message="Age is required"
+          >
+            <label for="age">Age (18-120)</label>
+            <input type="number" id="age" name="age" min="18" max="120" required />
+          </form-group>
+
+          <form-group
+            range-underflow-message="Price must be at least $1"
+            range-overflow-message="Price cannot exceed $10,000"
+            step-mismatch-message="Price must be in increments of $0.01"
+          >
+            <label for="price">Price ($1-$10,000)</label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              min="1"
+              max="10000"
+              step="0.01"
+            />
+          </form-group>
+
+          <form-group
+            range-underflow-message="Quantity must be at least 1"
+            step-mismatch-message="Quantity must be a multiple of 5"
+          >
+            <label for="quantity">Quantity (multiples of 5)</label>
+            <input type="number" id="quantity" name="quantity" min="1" step="5" />
+          </form-group>
+        </div>
+
+        <button type="submit">Submit</button>
+      </form>
+      <div class="success-box" id="number-success">
+        ✓ Form submitted successfully!
+      </div>
+    </div>
+
+    <!-- Date/Time Validation -->
+    <div class="demo-section">
+      <h2>4. Date & Time Validation</h2>
+      <form id="date-form">
+        <div class="grid">
+          <form-group
+            value-missing-message="Please select a date"
+            range-underflow-message="Date cannot be in the past"
+          >
+            <label for="event-date">Event Date (Future dates only)</label>
+            <input type="date" id="event-date" name="event-date" required />
+          </form-group>
+
+          <form-group value-missing-message="Please select a time">
+            <label for="event-time">Event Time</label>
+            <input type="time" id="event-time" name="event-time" required />
+          </form-group>
+        </div>
+
+        <button type="submit">Submit</button>
+      </form>
+      <div class="success-box" id="date-success">
+        ✓ Form submitted successfully!
+      </div>
+    </div>
+    </div>
+
+    <!-- Custom Styling Demo -->
+    <div class="demo-section custom-styled">
+      <h2>5. Custom Styling with CSS Variables</h2>
+      <div class="code-block">
+        <code>
+          --error-message-color: #e74c3c;<br />
+          --error-border-color: #e74c3c;<br />
+          --error-message-font-size: 0.9rem;<br />
+          --form-group-margin: 1.5rem;
+        </code>
+      </div>
+      <form id="styled-form">
+        <form-group value-missing-message="This field uses custom styling!">
+          <label for="custom-input">Try leaving this field empty</label>
+          <input type="text" id="custom-input" name="custom-input" required />
+        </form-group>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+    <!-- Programmatic API Demo -->
+    <div class="demo-section">
+      <h2>6. Programmatic API Demo</h2>
+      <form-group
+        id="api-demo-group"
+        value-missing-message="This field is required for API demo"
+      >
+        <label for="api-input">Test Input (min 5 characters)</label>
+        <input
+          type="text"
+          id="api-input"
+          name="api-input"
+          required
+          minlength="5"
+        />
+      </form-group>
+
+      <div style="margin-top: 1rem">
+        <button type="button" onclick="validateField()">Validate</button>
+        <button type="button" onclick="resetField()">Reset</button>
+        <button type="button" onclick="checkValidity()">Check Validity</button>
+        <button type="button" onclick="getInput()">Get Input Element</button>
+      </div>
+
+      <div class="event-log" id="api-log">
+        <div>API Demo - Click buttons above to test programmatic methods</div>
+      </div>
+    </div>
+
+    <!-- Event Listener Demo -->
+    <div class="demo-section">
+      <h2>7. Custom Event Listener Demo</h2>
+      <form id="event-form">
+        <form-group id="event-demo" value-missing-message="Required field">
+          <label for="event-input">Type and blur to see events</label>
+          <input type="email" id="event-input" name="event-input" required />
+        </form-group>
+      </form>
+
+      <div class="event-log" id="event-log">
+        <div>Event Log - Interact with the field above</div>
+      </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    
+    <script>
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("event-date").setAttribute("min", today);
+
+      // Form submission handlers
+      document.getElementById("basic-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        document.getElementById("basic-success").style.display = "block";
+        setTimeout(() => {
+          document.getElementById("basic-success").style.display = "none";
+        }, 3000);
+      });
+
+      document.getElementById("length-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        document.getElementById("length-success").style.display = "block";
+        setTimeout(() => {
+          document.getElementById("length-success").style.display = "none";
+        }, 3000);
+      });
+
+      document.getElementById("number-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        document.getElementById("number-success").style.display = "block";
+        setTimeout(() => {
+          document.getElementById("number-success").style.display = "none";
+        }, 3000);
+      });
+
+      document.getElementById("date-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        document.getElementById("date-success").style.display = "block";
+        setTimeout(() => {
+          document.getElementById("date-success").style.display = "none";
+        }, 3000);
+      });
+
+      document.getElementById("styled-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        alert("Custom styled form submitted!");
+      });
+
+      // Programmatic API functions
+      function validateField() {
+        const formGroup = document.getElementById("api-demo-group");
+        const isValid = formGroup.validate();
+        logToApi(
+          `validate() called - Result: ${isValid}`,
+          isValid ? "success" : "error"
+        );
+      }
+
+      function resetField() {
+        const formGroup = document.getElementById("api-demo-group");
+        formGroup.reset();
+        logToApi(
+          "reset() called - Field cleared and validation reset",
+          "success"
+        );
+      }
+
+      function checkValidity() {
+        const formGroup = document.getElementById("api-demo-group");
+        const isValid = formGroup.isValid;
+        logToApi(
+          `isValid property - Result: ${isValid}`,
+          isValid ? "success" : "error"
+        );
+      }
+
+      function getInput() {
+        const formGroup = document.getElementById("api-demo-group");
+        const input = formGroup.input;
+        logToApi(
+          `input property - Element: ${input.tagName}, Value: "${input.value}"`,
+          "success"
+        );
+      }
+
+      function logToApi(message, type = "") {
+        const log = document.getElementById("api-log");
+        const div = document.createElement("div");
+        div.className = type;
+        div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      // Event listener demo
+      const eventDemo = document.getElementById("event-demo");
+      eventDemo.addEventListener("validation-error", (e) => {
+        logToEvent(`validation-error event: ${e.detail.message}`, "error");
+        logToEvent(`  Validity key: ${e.detail.validityKey}`, "error");
+      });
+
+      function logToEvent(message, type = "") {
+        const log = document.getElementById("event-log");
+        const div = document.createElement("div");
+        div.className = type;
+        div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+      }
+    </script>
+  </body>
+</html>
