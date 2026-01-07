@@ -1,42 +1,11 @@
-/**
- * FormGroup Web Component
- * A custom element for enhanced form validation with accessible error messaging
- * @version 1.0.0
- * @license MIT
- */
-
 const formGroupStyles = new CSSStyleSheet();
-
-formGroupStyles.replaceSync(`
-  :host {
-    display: block;
-    margin-bottom: var(--form-group-margin, 1rem);
-  }
-
-  .error-message {
-    display: block;
-    color: var(--error-message-color, #dc3545);
-    font-size: var(--error-message-font-size, 0.875rem);
-    margin-top: var(--error-message-margin-top, 0.25rem);
-    transition: opacity 0.2s ease-in-out;
-  }
-
-  .error-message:empty {
-    display: none;
-  }
-
-  :host([show-error]) ::slotted(input),
-  :host([show-error]) ::slotted(textarea),
-  :host([show-error]) ::slotted(select) {
-    border-color: var(--error-border-color, #dc3545);
-    outline-color: var(--error-border-color, #dc3545);
-  }
-`);
+formGroupStyles.replaceSync(`:host{display:block}.error-message{display:block;color:var(--error-message-color,#dc3545);font-size:var(--error-message-font-size, .875rem);margin-top:var(--error-message-margin-top,.25rem);transition:opacity .2s ease-in-out}.error-message:empty{display:none}:host([show-error]) ::slotted(input),:host([show-error]) ::slotted(select),:host([show-error]) ::slotted(textarea){border-color:var(--error-border-color,#dc3545);outline-color:var(--error-border-color,#dc3545)}`);
 
 class FormGroup extends HTMLElement {
-    #input;
-    #boundHandlers = {};
-    #isInitialized = false;
+    #input; // Reference to the input element
+    #boundHandlers = {}; // Bound event handlers for proper cleanup
+    #isInitialized = false; // Flag to prevent multiple initializations
+    #hasUserInteracted = false; // Flag to track if user has interacted with the field
 
     static get observedAttributes() {
         return [
@@ -53,52 +22,39 @@ class FormGroup extends HTMLElement {
     }
 
     constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
+        super(); // Call the parent constructor
+
+        this.attachShadow({ mode: 'open' }); // Create the shadow root
         this.shadowRoot.adoptedStyleSheets = [formGroupStyles];
-        this.shadowRoot.innerHTML = `
-      <slot></slot>
-      <span class="error-message"
-            role="alert"
-            aria-live="polite"
-            part="error-message">
-      </span>
-    `;
+        this.shadowRoot.innerHTML = `<slot></slot><span class="error-message" role="alert"  aria-live="polite" part="error-message"></span>`;
     }
 
-    /**
-     * Prevents default browser validation popup
-     */
+    // Prevents default browser validation popup
     #handleInvalid(e) {
         e.preventDefault();
         this.#showError();
     }
 
-    /**
-     * Clears error message while user is typing
-     */
+    // Clears error message while user is typing
     #handleInput() {
-        if (this.#input) {
-            this.#clearError();
-        }
+        if (this.#input) this.#clearError();
+
     }
 
-    /**
-     * Validates and shows error on blur
-     */
+    // Validates and shows error on blur
     #handleBlur() {
-        if (this.#input && !this.#input.validity.valid) {
-            this.#showError();
-        }
+        this.#hasUserInteracted = true; // Mark that user has interacted
+        if (this.#input && !this.#input.validity.valid) this.#showError();
+
     }
 
-    /**
-     * Shows error message based on validation state
-     */
+    // Shows error message based on validation state
     #showError() {
         if (!this.#input) return;
+        if (!this.#hasUserInteracted) return;
 
         const validityKey = this.#getFirstInvalid(this.#input.validity);
+
         if (validityKey) {
             const message = this.#customErrorMessage[validityKey];
             this.#errorMessage.textContent = message;
@@ -117,25 +73,21 @@ class FormGroup extends HTMLElement {
         }
     }
 
-    /**
-     * Clears error message and styling
-     */
+    // Clears error message and styling
     #clearError() {
         this.#errorMessage.textContent = '';
         this.removeAttribute('show-error');
     }
 
-    /**
-     * Attaches event listeners to input
-     */
+    // Attaches event listeners to input
     #attachListeners() {
         if (!this.#input) return;
 
         // Store bound handlers for proper cleanup
         this.#boundHandlers = {
-            invalid: this.#handleInvalid.bind(this),
-            input: this.#handleInput.bind(this),
-            blur: this.#handleBlur.bind(this)
+            invalid: this.#handleInvalid.bind(this), // Prevents default browser validation popup
+            input: this.#handleInput.bind(this), // Clears error message while user is typing
+            blur: this.#handleBlur.bind(this) // Validates and shows error on blur
         };
 
         this.#input.addEventListener('invalid', this.#boundHandlers.invalid);
@@ -143,9 +95,7 @@ class FormGroup extends HTMLElement {
         this.#input.addEventListener('blur', this.#boundHandlers.blur);
     }
 
-    /**
-     * Removes event listeners from input
-     */
+    // Removes event listeners from input
     #detachListeners() {
         if (!this.#input || !this.#boundHandlers) return;
 
@@ -156,6 +106,48 @@ class FormGroup extends HTMLElement {
         this.#boundHandlers = {};
     }
 
+    // Setup input formatting for special fields (Tax ID, SSN)
+    #setupInputFormatting() {
+        if (!this.#input) return;
+
+        const inputName = this.#input.name || this.#input.id || '';
+        const inputId = this.#input.id || '';
+
+        // Tax ID formatting (XX-XXXXXXX - exactly 9 digits)
+        if (inputName.includes('tax_id') || inputId.includes('tax_id')) {
+            this.#input.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, ''); // Remove all non-digits
+
+                // Limit to 9 digits
+                if (value.length > 9) {
+                    value = value.substring(0, 9);
+                }
+
+                // Format as XX-XXXXXXX
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + '-' + value.substring(2);
+                }
+
+                e.target.value = value;
+            });
+        }
+
+        // SSN formatting (exactly 4 digits)
+        if (inputName.includes('ssn') || inputId.includes('ssn')) {
+            this.#input.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, ''); // Remove all non-digits
+
+                // Limit to 4 digits
+                if (value.length > 4) {
+                    value = value.substring(0, 4);
+                }
+
+                e.target.value = value;
+            });
+        }
+    }
+
+    // Lifecycle methods
     connectedCallback() {
         if (this.#isInitialized) return;
 
@@ -166,32 +158,30 @@ class FormGroup extends HTMLElement {
             return;
         }
 
-        this.#attachListeners();
+        this.#attachListeners(); // Attach event listeners
+        this.#setupInputFormatting(); // Setup input formatting for special fields
         this.#isInitialized = true;
     }
 
+    // Cleanup event listeners
     disconnectedCallback() {
         this.#detachListeners();
         this.#isInitialized = false;
     }
 
+    // Re-validate if error is currently shown and message attributes change
     attributeChangedCallback(name, oldValue, newValue) {
-        // Re-validate if error is currently shown and message attributes change
         if (oldValue !== newValue && this.hasAttribute('show-error')) {
             this.#showError();
         }
     }
 
-    /**
-     * Gets the error message element
-     */
+    // Gets the error message element
     get #errorMessage() {
         return this.shadowRoot.querySelector('.error-message');
     }
 
-    /**
-     * Finds the first invalid validity state
-     */
+    // Finds the first invalid validity state
     #getFirstInvalid(validityState) {
         const validityKeys = [
             'valueMissing',
@@ -213,9 +203,7 @@ class FormGroup extends HTMLElement {
         return null;
     }
 
-    /**
-     * Gets custom error messages from attributes or defaults
-     */
+    // Gets custom error messages from attributes or defaults
     get #customErrorMessage() {
         const input = this.#input;
         const inputType = input?.type || 'text';
@@ -262,13 +250,11 @@ class FormGroup extends HTMLElement {
         };
     }
 
-    /**
-     * Gets type-specific error messages for type mismatch errors
-     */
+    // Gets type-specific error messages for type mismatch errors
     #getTypeMismatchMessage(inputType) {
         const typeMessages = {
             email: 'Please enter a valid email address (e.g., user@example.com).',
-            url: 'Please enter a valid URL (e.g., https://www.example.com).',
+            url: 'Please enter a valid URL starting with http:// or https://.',
             tel: 'Please enter a valid telephone number.',
             number: 'Please enter a valid number.',
             date: 'Please enter a valid date.',
@@ -290,35 +276,35 @@ class FormGroup extends HTMLElement {
     validate() {
         if (!this.#input) return true;
 
+        // Mark as interacted when validate is called programmatically
+        this.#hasUserInteracted = true;
+
         const isValid = this.#input.checkValidity();
         if (!isValid) {
             this.#showError();
         } else {
             this.#clearError();
         }
+
         return isValid;
     }
 
-    /**
-     * Public API: Clear validation state
-     */
+
+    // Public API: Clear validation state
     reset() {
         this.#clearError();
+        this.#hasUserInteracted = false; // Reset interaction flag
         if (this.#input) {
             this.#input.value = '';
         }
     }
 
-    /**
-     * Public API: Get the wrapped input element
-     */
+    // Public API: Get the wrapped input element
     get input() {
         return this.#input;
     }
 
-    /**
-     * Public API: Check if input is valid
-     */
+    // Public API: Check if input is valid
     get isValid() {
         return this.#input ? this.#input.validity.valid : true;
     }
