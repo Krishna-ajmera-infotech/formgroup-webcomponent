@@ -2,10 +2,8 @@
 class FormValidation {
     // Form validation function to check if all required fields are valid
     static isFormValid(form) {
-        // Get all form-group elements in the form
         const formGroups = form.querySelectorAll('form-group');
 
-        // Check if all form-groups are valid
         for (const formGroup of formGroups) {
             const input = formGroup.querySelector('input, select, textarea');
             if (input && input.hasAttribute('required') && !formGroup.isValid) {
@@ -13,7 +11,6 @@ class FormValidation {
             }
         }
 
-        // Also check regular inputs not wrapped in form-groups
         const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
         for (const input of inputs) {
             if (!input.validity.valid || input.value.trim() === '') {
