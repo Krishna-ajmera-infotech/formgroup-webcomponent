@@ -1,53 +1,26 @@
 /**
- * FormGroup Web Component
- * A custom form validation component that provides enhanced validation,
- * custom error messages, and password strength validation.
- *
- * @module FormGroup
- * @version 1.0.0
- */
-
-// ============================================================================
-// CONSTANTS
-// ============================================================================
-
-/**
- * Centralized validation messages for consistent error reporting.
- * All messages support template placeholders (e.g., {max}, {min}, {pattern}).
+ * Validation messages for various input validity states.
  * @constant {Object}
  */
 const VALIDATION_MESSAGES = {
-    // Password validation messages
     PASSWORD_MISMATCH: 'Passwords do not match',
     PASSWORD_MATCH: 'Passwords match',
     PASSWORD_FIELD_NOT_FOUND: 'Password field with ID "{id}" not found.',
-
-    // General validation messages
     VALUE_MISSING: 'This field is required. Please provide a value to continue.',
     CUSTOM_ERROR: 'Invalid input.',
     BAD_INPUT: 'Invalid input detected. Please enter a valid value.',
-
-    // Length validation messages
     TOO_LONG: 'This field is too long. Please shorten your input.',
     TOO_LONG_WITH_MAX: 'This field is too long. Maximum length is {max} characters.',
     TOO_SHORT: 'This field is too short. Please provide more characters.',
     TOO_SHORT_WITH_MIN: 'This field is too short. Minimum length is {min} characters.',
-
-    // Range validation messages
     RANGE_OVERFLOW: 'Value is too high. Please enter a lower value.',
     RANGE_OVERFLOW_WITH_MAX: 'Value is too high. Maximum allowed value is {max}.',
     RANGE_UNDERFLOW: 'Value is too low. Please enter a higher value.',
     RANGE_UNDERFLOW_WITH_MIN: 'Value is too low. Minimum allowed value is {min}.',
-
-    // Pattern validation messages
     PATTERN_MISMATCH: 'Value does not match the required format. Please check your input.',
     PATTERN_MISMATCH_WITH_PATTERN: 'Invalid format. Please match the required pattern: {pattern}',
-
-    // Step validation messages
     STEP_MISMATCH: 'Value does not match the required step. Please adjust your input.',
     STEP_MISMATCH_WITH_STEP: 'Invalid value. Please use increments of {step}.',
-
-    // Type mismatch messages
     TYPE_MISMATCH_EMAIL: 'Please enter a valid email address (e.g., user@example.com).',
     TYPE_MISMATCH_URL: 'Please enter a valid URL starting with http:// or https://.',
     TYPE_MISMATCH_TEL: 'Please enter a valid telephone number.',
@@ -67,11 +40,8 @@ const VALIDATION_MESSAGES = {
  * @constant {Object}
  */
 const ICONS = {
-    /** Green checkmark circle for valid/success states */
     CHECK_CIRCLE: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 19 18" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9 18C13.9706 18 18 13.9706 18 9C18 7.2993 17.5283 5.70877 16.7085 4.35213L18.5303 2.53033C18.8232 2.23744 18.8232 1.76256 18.5303 1.46967C18.2374 1.17678 17.7626 1.17678 17.4697 1.46967L15.8164 3.12296C14.166 1.21049 11.7244 0 9 0C4.02944 0 0 4.02944 0 9C0 13.9706 4.02944 18 9 18ZM15.8164 3.12296L9 9.93934L6.53033 7.46967C6.23744 7.17678 5.76256 7.17678 5.46967 7.46967C5.17678 7.76256 5.17678 8.23744 5.46967 8.53033L8.46967 11.5303C8.61032 11.671 8.80109 11.75 9 11.75C9.19891 11.75 9.38968 11.671 9.53033 11.5303L16.7085 4.35213C16.4456 3.91698 16.1468 3.5059 15.8164 3.12296Z" fill="#398D1C"/></svg>`,
-    /** Red X circle for invalid/error states */
     X_CIRCLE: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" style="display: inline; margin-right: 6px; vertical-align: middle;"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22ZM9.53033 8.46967C9.23744 8.17678 8.76256 8.17678 8.46967 8.46967C8.17678 8.76256 8.17678 9.23744 8.46967 9.53033L10.9393 12L8.46967 14.4697C8.17678 14.7626 8.17678 15.2374 8.46967 15.5303C8.76256 15.8232 9.23744 15.8232 9.53033 15.5303L12 13.0607L14.4697 15.5303C14.7626 15.8232 15.2374 15.8232 15.5303 15.5303C15.8232 15.2374 15.8232 14.7626 15.5303 14.4697L13.0607 12L15.5303 9.53033C15.8232 9.23744 15.8232 8.76256 15.5303 8.46967C15.2374 8.17678 14.7626 8.17678 14.4697 8.46967L12 10.9393L9.53033 8.46967Z" fill="#D22721"/></svg>`,
-    /** Gray X mark for neutral/incomplete states */
     X_MARK: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M13.2431 4.75732L9.00045 8.99996M9.00045 8.99996L4.75781 13.2426M9.00045 8.99996L13.2431 13.2426M9.00045 8.99996L4.75781 4.75732" stroke="#9A9A9A" stroke-width="0.9"/></svg>`
 };
 
@@ -80,9 +50,7 @@ const ICONS = {
  * @constant {Object}
  */
 const COLORS = {
-    /** Color for success/valid states */
     SUCCESS: '#398D1C',
-    /** Color for error/invalid states */
     ERROR: '#D22721'
 };
 
@@ -104,7 +72,7 @@ formGroupStyles.replaceSync(`
     }
     .error-message {
         display: block;
-        color: var(--error-message-color, #dc3545);
+        color: var(--error-message-color, ${COLORS.ERROR});
         font-size: var(--error-message-font-size, .875rem);
         margin-top: var(--error-message-margin-top, .25rem);
     }
@@ -113,7 +81,7 @@ formGroupStyles.replaceSync(`
     }
     .success-message {
         display: none;
-        color: var(--success-message-color, #398d1c);
+        color: var(--success-message-color, ${COLORS.SUCCESS});
         font-size: var(--success-message-font-size, .875rem);
         margin-top: var(--success-message-margin-top, .25rem);
     }
@@ -123,118 +91,46 @@ formGroupStyles.replaceSync(`
     :host([show-error]) ::slotted(input),
     :host([show-error]) ::slotted(select),
     :host([show-error]) ::slotted(textarea) {
-        border-color: var(--error-border-color, #dc3545);
-        outline-color: var(--error-border-color, #dc3545);
+        border-color: var(--error-border-color, ${COLORS.ERROR});
+        outline-color: var(--error-border-color, ${COLORS.ERROR});
     }
     :host([show-success]) ::slotted(input),
     :host([show-success]) ::slotted(select),
     :host([show-success]) ::slotted(textarea) {
-        border-color: var(--success-border-color, #398d1c);
-        outline-color: var(--success-border-color, #398d1c);
+        border-color: var(--success-border-color, ${COLORS.SUCCESS});
+        outline-color: var(--success-border-color, ${COLORS.SUCCESS});
     }
     .requirement-item.valid .requirement-text {
-        color: var(--requirement-valid-text, #398d1c);
+        color: var(--requirement-valid-text, ${COLORS.SUCCESS});
     }
 `);
 
-// ============================================================================
-// FORMGROUP WEB COMPONENT
-// ============================================================================
-
 /**
  * FormGroup - A custom web component for enhanced form validation.
- *
- * @class FormGroup
- * @extends HTMLElement
- *
- * @example
- * <form-group>
- *   <label for="email">Email</label>
- *   <input type="email" id="email" required />
- * </form-group>
- *
- * @fires validation-error - When validation fails
- * @fires password-validation - When password requirements are checked
  */
 class FormGroup extends HTMLElement {
-    // ========================================
-    // PRIVATE FIELDS
-    // ========================================
-
-    /** @type {HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement|null} */
     #input = null;
-
-    /** @type {Object} Bound event handlers for proper cleanup */
     #boundHandlers = {};
-
-    /** @type {Function|null} Handler for main password field changes */
     #passwordFieldHandler = null;
-
-    /** @type {HTMLInputElement|null} Reference to main password field */
     #passwordFieldReference = null;
-
-    /** @type {boolean} Flag to prevent multiple initializations */
     #isInitialized = false;
-
-    /** @type {boolean} Flag to track if user has interacted with the field */
     #hasUserInteracted = false;
-
-    /** @type {'group'|'simple'|null} Password validation mode */
     #passwordValidationMode = null;
-
-    /** @type {string|null} ID of password field to match against */
     #confirmPasswordFor = null;
-
-    // ========================================
-    // STATIC PASSWORD VALIDATORS
-    // ========================================
 
     /**
      * Static password validation functions.
      * @private
      */
     static #passwordValidators = {
-        /**
-         * Checks if password meets minimum length requirement.
-         * @param {string} value - Password to validate
-         * @param {number} [minLength=8] - Minimum required length
-         * @returns {boolean}
-         */
         minLength: (value, minLength = 8) => value.length >= minLength,
-
-        /**
-         * Checks if password contains at least one number.
-         * @param {string} value - Password to validate
-         * @returns {boolean}
-         */
         hasNumber: (value) => /[0-9]/.test(value),
-
-        /**
-         * Checks if password contains at least one special character.
-         * @param {string} value - Password to validate
-         * @returns {boolean}
-         */
         hasSpecialChar: (value) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value),
-
-        /**
-         * Checks if password contains at least one uppercase letter.
-         * @param {string} value - Password to validate
-         * @returns {boolean}
-         */
         hasUppercase: (value) => /[A-Z]/.test(value),
-
-        /**
-         * Checks if password contains at least one lowercase letter.
-         * @param {string} value - Password to validate
-         * @returns {boolean}
-         */
         hasLowercase: (value) => /[a-z]/.test(value),
 
         /**
          * Validates password against all requirements.
-         * @param {string} value - Password to validate
-         * @param {Object} [requirements={}] - Custom requirements configuration
-         * @returns {Object} Validation results for each requirement
          */
         validateAll: (value, requirements = {}) => {
             const defaultRequirements = {
@@ -277,10 +173,6 @@ class FormGroup extends HTMLElement {
         ];
     }
 
-    // ========================================
-    // LIFECYCLE METHODS
-    // ========================================
-
     /**
      * Creates and initializes the FormGroup component.
      */
@@ -288,20 +180,11 @@ class FormGroup extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.adoptedStyleSheets = [formGroupStyles];
-        this.shadowRoot.innerHTML = `
-            <slot></slot>
-            <span class="error-message" role="alert" aria-live="polite" part="error-message"></span>
-        `;
+        this.shadowRoot.innerHTML = `<slot></slot><span class="error-message" role="alert" aria-live="polite" part="error-message"></span>`;
     }
-
-    // ========================================
-    // EVENT HANDLERS
-    // ========================================
 
     /**
      * Prevents default browser validation popup and shows custom error.
-     * @param {Event} e - The invalid event
-     * @private
      */
     #handleInvalid(e) {
         e.preventDefault();
@@ -361,12 +244,11 @@ class FormGroup extends HTMLElement {
         this.#input.setCustomValidity('');
 
         if (email) {
-            // Pattern requires: local@domain.tld (TLD must be 2+ chars)
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
             if (!emailPattern.test(email)) {
                 this.#input.setCustomValidity(
-                    'Please enter a valid email address with a proper domain (e.g., user@example.com)'
+                    'Please enter a valid email address'
                 );
             }
         }
@@ -409,10 +291,7 @@ class FormGroup extends HTMLElement {
         this.removeAttribute('show-error');
     }
 
-    // ========================================
     // EVENT LISTENER MANAGEMENT
-    // ========================================
-
     /**
      * Attaches event listeners to the input element.
      * @private
@@ -453,10 +332,7 @@ class FormGroup extends HTMLElement {
         }
     }
 
-    // ========================================
     // INPUT FORMATTING
-    // ========================================
-
     /**
      * Sets up automatic input formatting for special field types.
      * Supports Tax ID (XX-XXXXXXX) and SSN (4 digits) formats.
@@ -499,10 +375,7 @@ class FormGroup extends HTMLElement {
         });
     }
 
-    // ========================================
     // PASSWORD VALIDATION
-    // ========================================
-
     /**
      * Initializes password validation based on attributes.
      * Supports 'group' mode (with requirements display) and 'simple' mode.
@@ -681,10 +554,7 @@ class FormGroup extends HTMLElement {
         this.#input?.parentNode?.insertBefore(statusElement, this.#input.nextSibling);
     }
 
-    // ========================================
     // PASSWORD REQUIREMENTS (GROUP MODE)
-    // ========================================
-
     /**
      * Updates password requirements validation state (group mode only).
      * Dispatches 'password-validation' event with results.
@@ -793,10 +663,7 @@ class FormGroup extends HTMLElement {
         }
     }
 
-    // ========================================
-    // WEB COMPONENT LIFECYCLE
-    // ========================================
-
+    // WEB COMPONENT LIFECYCLE METHODS
     /**
      * Called when the element is added to the DOM.
      * Initializes the component and attaches event listeners.
@@ -839,10 +706,7 @@ class FormGroup extends HTMLElement {
         }
     }
 
-    // ========================================
     // HELPER METHODS & GETTERS
-    // ========================================
-
     /**
      * Gets the error message element from shadow DOM.
      * @returns {HTMLElement} The error message span element
@@ -900,10 +764,8 @@ class FormGroup extends HTMLElement {
         };
     }
 
-    // ========================================
-    // ERROR MESSAGE GETTERS
-    // ========================================
 
+    // ERROR MESSAGE GETTERS
     /** @private */
     #getValueMissingMessage() {
         return this.getAttribute('value-missing-message') || VALIDATION_MESSAGES.VALUE_MISSING;
@@ -992,10 +854,6 @@ class FormGroup extends HTMLElement {
         return typeMessages[inputType] || VALIDATION_MESSAGES.TYPE_MISMATCH_DEFAULT;
     }
 
-    // ========================================
-    // PUBLIC API
-    // ========================================
-
     /**
      * Manually triggers validation on the input.
      * @returns {boolean} Whether the input is valid
@@ -1058,10 +916,6 @@ class FormGroup extends HTMLElement {
         return this.#input?.validity.valid ?? true;
     }
 }
-
-// ============================================================================
-// COMPONENT REGISTRATION
-// ============================================================================
 
 // Register the custom element
 customElements.define('form-group', FormGroup);
