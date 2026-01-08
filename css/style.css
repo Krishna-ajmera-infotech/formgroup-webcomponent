@@ -150,3 +150,150 @@ code {
 .event-log .success {
   color: #51cf66;
 }
+
+/* Password validation specific styles */
+.password-container {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  font-size: 1.1rem;
+  padding: 0.25rem;
+  margin: 0;
+}
+
+.password-toggle:hover {
+  color: #007bff;
+  background: none;
+}
+
+/* Custom styling for password requirements */
+.password-demo {
+  --requirement-valid-bg: #28a745;
+  --requirement-invalid-bg: #dc3545;
+  --requirement-valid-text: #155724;
+  --requirement-text-color: #666;
+  --requirements-title-color: #495057;
+}
+
+/* Enhanced form styling for password demos */
+.password-section input {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.password-section input:focus {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: white;
+}
+
+.password-section .demo-section {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive improvements for password demo */
+@media (max-width: 768px) {
+  .password-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .password-section {
+    margin: 1rem -1rem;
+    border-radius: 0;
+  }
+}
+
+/* Animation for requirement validation */
+@keyframes requirementCheck {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+password-requirements .requirement.valid .requirement-icon {
+  animation: requirementCheck 0.3s ease-in-out;
+}
+
+/* Strength meter styling */
+.password-strength {
+  margin-top: 0.5rem;
+  height: 4px;
+  background: #e9ecef;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.password-strength-bar {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+  background: linear-gradient(90deg, #dc3545, #ffc107, #28a745);
+}
+
+/* Password requirements styling for regular HTML elements */
+.password-requirements {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.password-requirements .requirements-title {
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.password-requirements .requirements-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .password-requirements .requirements-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.password-requirements .requirement-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.password-requirements .requirement-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  transition: all 0.2s;
+}
+
+.password-requirements .requirement-text {
+  color: #9ca3af;
+}
+
+.password-requirements .requirement-item.valid .requirement-text {
+  color: #10b981;
+}
+
+.password-requirements .requirement-item.valid .requirement-icon {
+  animation: requirementCheck 0.3s ease-in-out;
+}
