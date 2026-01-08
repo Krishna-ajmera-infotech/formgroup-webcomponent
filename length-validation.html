@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Length Validation - FormGroup Component</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="sidebar">
+        <h3>Form Examples</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="basic-validation.html">Basic Validation</a></li>
+          <li>
+            <a href="length-validation.html" class="active"
+              >Length Validation</a
+            >
+          </li>
+          <li><a href="number-validation.html">Number Validation</a></li>
+          <li><a href="date-validation.html">Date Validation</a></li>
+          <li><a href="password-validation.html">Password Validation</a></li>
+          <li><a href="styled-validation.html">Custom Styling</a></li>
+          <li><a href="api-demo.html">API Demo</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <h1>Length Validation (minlength/maxlength)</h1>
+        <div class="info-box">
+          <strong>About:</strong> This form demonstrates minlength and maxlength
+          validation for text inputs and textareas.
+        </div>
+
+        <div class="demo-section">
+          <form id="length-form">
+            <form-group
+              too-short-message="Username must be at least 3 characters"
+              too-long-message="Username cannot exceed 20 characters"
+              value-missing-message="Username is required"
+            >
+              <label for="username">Username (3-20 characters)</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                minlength="3"
+                maxlength="20"
+                required
+              />
+            </form-group>
+
+            <form-group
+              too-short-message="Bio must be at least 10 characters"
+              too-long-message="Bio cannot exceed 200 characters"
+            >
+              <label for="bio">Bio (10-200 characters, optional)</label>
+              <textarea
+                id="bio"
+                name="bio"
+                minlength="10"
+                maxlength="200"
+                rows="4"
+              ></textarea>
+            </form-group>
+
+            <button type="submit" disabled>Submit</button>
+          </form>
+          <div class="success-box" id="length-success">
+            ✓ Form submitted successfully!
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+    <script>
+      // Ensure submit buttons are disabled by default
+      FormValidation.disableAllSubmitButtons();
+      FormValidation.initializeForm("length-form", "length-success");
+    </script>
+  </body>
+</html>

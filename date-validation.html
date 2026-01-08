@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Date Validation - FormGroup Component</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="sidebar">
+        <h3>Form Examples</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="basic-validation.html">Basic Validation</a></li>
+          <li><a href="length-validation.html">Length Validation</a></li>
+          <li><a href="number-validation.html">Number Validation</a></li>
+          <li>
+            <a href="date-validation.html" class="active">Date Validation</a>
+          </li>
+          <li><a href="password-validation.html">Password Validation</a></li>
+          <li><a href="styled-validation.html">Custom Styling</a></li>
+          <li><a href="api-demo.html">API Demo</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <h1>Date & Time Validation</h1>
+        <div class="info-box">
+          <strong>About:</strong> This form demonstrates date and time
+          validation with min/max constraints.
+        </div>
+
+        <div class="demo-section">
+          <form id="date-form">
+            <div class="grid">
+              <form-group
+                value-missing-message="Event date is required"
+                range-underflow-message="Event date cannot be in the past"
+              >
+                <label for="event-date">Event Date (today or later)</label>
+                <input type="date" id="event-date" name="event-date" required />
+              </form-group>
+
+              <form-group value-missing-message="Event time is required">
+                <label for="event-time">Event Time</label>
+                <input type="time" id="event-time" name="event-time" required />
+              </form-group>
+            </div>
+
+            <button type="submit" disabled>Submit</button>
+          </form>
+          <div class="success-box" id="date-success">
+            ✓ Form submitted successfully!
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+    <script>
+      // Set minimum date to today
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("event-date").setAttribute("min", today);
+
+      // Ensure submit buttons are disabled by default
+      FormValidation.disableAllSubmitButtons();
+      FormValidation.initializeForm("date-form", "date-success");
+    </script>
+  </body>
+</html>

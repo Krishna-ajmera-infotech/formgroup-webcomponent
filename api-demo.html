@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Demo - FormGroup Component</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="sidebar">
+        <h3>Form Examples</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="basic-validation.html">Basic Validation</a></li>
+          <li><a href="length-validation.html">Length Validation</a></li>
+          <li><a href="number-validation.html">Number Validation</a></li>
+          <li><a href="date-validation.html">Date Validation</a></li>
+          <li><a href="password-validation.html">Password Validation</a></li>
+          <li><a href="styled-validation.html">Custom Styling</a></li>
+          <li><a href="api-demo.html" class="active">API Demo</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <h1>Programmatic API Demo</h1>
+        <div class="info-box">
+          <strong>About:</strong> This page demonstrates the programmatic API
+          for the FormGroup component.
+        </div>
+
+        <div class="demo-section">
+          <form-group
+            id="api-demo-group"
+            value-missing-message="This field is required for API demo"
+          >
+            <label for="api-demo">Test Field</label>
+            <input type="text" id="api-demo" name="api-demo" required />
+          </form-group>
+
+          <div class="api-buttons">
+            <button type="button" onclick="validateField()">Validate</button>
+            <button type="button" onclick="resetField()">Reset</button>
+            <button type="button" onclick="checkValidity()">
+              Check Validity
+            </button>
+            <button type="button" onclick="getInput()">
+              Get Input Element
+            </button>
+          </div>
+
+          <div class="log-section">
+            <h4>API Log:</h4>
+            <div id="api-log" class="log-output"></div>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <h3>Custom Events Demo</h3>
+          <form-group
+            id="event-demo"
+            value-missing-message="This field demonstrates custom events"
+          >
+            <label for="event-field">Event Test Field</label>
+            <input type="email" id="event-field" name="event-field" required />
+          </form-group>
+
+          <div class="log-section">
+            <h4>Event Log:</h4>
+            <div id="event-log" class="log-output"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+    <script>
+      // Programmatic API functions
+      function validateField() {
+        const formGroup = document.getElementById("api-demo-group");
+        const isValid = formGroup.validate();
+        logToApi(
+          `validate() called - Result: ${isValid}`,
+          isValid ? "success" : "error"
+        );
+      }
+
+      function resetField() {
+        const formGroup = document.getElementById("api-demo-group");
+        formGroup.reset();
+        logToApi(
+          "reset() called - Field cleared and validation reset",
+          "success"
+        );
+      }
+
+      function checkValidity() {
+        const formGroup = document.getElementById("api-demo-group");
+        const isValid = formGroup.isValid;
+        logToApi(
+          `isValid property - Result: ${isValid}`,
+          isValid ? "success" : "error"
+        );
+      }
+
+      function getInput() {
+        const formGroup = document.getElementById("api-demo-group");
+        const input = formGroup.input;
+        logToApi(
+          `input property - Element: ${input.tagName}, Value: "${input.value}"`,
+          "success"
+        );
+      }
+
+      function logToApi(message, type = "") {
+        const log = document.getElementById("api-log");
+        const div = document.createElement("div");
+        div.className = type;
+        div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      // Event listener demo
+      const eventDemo = document.getElementById("event-demo");
+      eventDemo.addEventListener("validation-error", (e) => {
+        logToEvent(`validation-error event: ${e.detail.message}`, "error");
+        logToEvent(`  Validity key: ${e.detail.validityKey}`, "error");
+      });
+
+      function logToEvent(message, type = "") {
+        const log = document.getElementById("event-log");
+        const div = document.createElement("div");
+        div.className = type;
+        div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Validation Test</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <main class="content">
+        <h1>Email Validation Test</h1>
+        <div class="info-box">
+          <strong>Test Case:</strong> The email "krishna.kumar@ajmerainf" should
+          be marked as invalid because it lacks a proper top-level domain (.com,
+          .org, etc.).
+        </div>
+
+        <div class="demo-section">
+          <h2>Test Email Validation</h2>
+          <form id="test-form">
+            <form-group
+              value-missing-message="Email is required"
+              type-mismatch-message="Please enter a valid email address with a proper domain"
+            >
+              <label for="test-email">Email Address</label>
+              <input
+                type="email"
+                id="test-email"
+                name="test-email"
+                required
+                value="krishna.kumar@ajmerainf"
+              />
+              <small style="color: #666; margin-top: 0.5rem; display: block">
+                Try typing in different email formats to test validation:
+                <br />• "krishna.kumar@ajmerainf" (invalid - no TLD) <br />•
+                "krishna.kumar@ajmerainfo.com" (valid) <br />• "invalid@"
+                (invalid) <br />• "test@domain" (invalid - no TLD)
+              </small>
+            </form-group>
+
+            <button type="submit" disabled>Submit</button>
+          </form>
+          <div class="success-box" id="test-success">
+            ✓ Email validation passed!
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <h2>Validation Status</h2>
+          <div
+            id="validation-status"
+            style="
+              padding: 1rem;
+              background: #f8f9fa;
+              border-radius: 4px;
+              font-family: monospace;
+            "
+          >
+            <p>
+              <strong>Current Email:</strong>
+              <span id="current-email">krishna.kumar@ajmerainf</span>
+            </p>
+            <p>
+              <strong>Browser Validity:</strong>
+              <span id="browser-validity">-</span>
+            </p>
+            <p>
+              <strong>Custom Validity:</strong>
+              <span id="custom-validity">-</span>
+            </p>
+            <p>
+              <strong>FormGroup Valid:</strong>
+              <span id="formgroup-validity">-</span>
+            </p>
+            <p>
+              <strong>Submit Button:</strong> <span id="button-status">-</span>
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+    <script>
+      FormValidation.disableAllSubmitButtons();
+      FormValidation.initializeForm(
+        "test-form",
+        "test-success",
+        "✓ Email validation passed!"
+      );
+
+      // Real-time validation status updates
+      function updateValidationStatus() {
+        const emailInput = document.getElementById("test-email");
+        const formGroup = emailInput.closest("form-group");
+        const submitButton = document.querySelector('button[type="submit"]');
+
+        document.getElementById("current-email").textContent =
+          emailInput.value || "(empty)";
+        document.getElementById("browser-validity").textContent = emailInput
+          .validity.valid
+          ? "VALID"
+          : "INVALID";
+        document.getElementById("custom-validity").textContent =
+          emailInput.validationMessage || "No message";
+        document.getElementById("formgroup-validity").textContent =
+          formGroup.isValid ? "VALID" : "INVALID";
+        document.getElementById("button-status").textContent =
+          submitButton.disabled ? "DISABLED" : "ENABLED";
+      }
+
+      // Update status on input changes
+      document
+        .getElementById("test-email")
+        .addEventListener("input", updateValidationStatus);
+      document.getElementById("test-email").addEventListener("blur", () => {
+        setTimeout(updateValidationStatus, 100); // Delay to allow validation to complete
+      });
+
+      // Initial status
+      setTimeout(updateValidationStatus, 100);
+    </script>
+  </body>
+</html>

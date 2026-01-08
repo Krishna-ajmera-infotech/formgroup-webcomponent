@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Basic Validation - FormGroup Component</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="sidebar">
+        <h3>Form Examples</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li>
+            <a href="basic-validation.html" class="active">Basic Validation</a>
+          </li>
+          <li><a href="length-validation.html">Length Validation</a></li>
+          <li><a href="number-validation.html">Number Validation</a></li>
+          <li><a href="date-validation.html">Date Validation</a></li>
+          <li><a href="password-validation.html">Password Validation</a></li>
+          <li><a href="styled-validation.html">Custom Styling</a></li>
+          <li><a href="api-demo.html">API Demo</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <h1>Basic Validation Examples</h1>
+        <div class="info-box">
+          <strong>About:</strong> This form demonstrates basic HTML5 validation
+          scenarios including required fields, email validation, pattern
+          matching, and select dropdowns.
+        </div>
+
+        <div class="demo-section">
+          <form id="basic-form">
+            <div class="grid">
+              <form-group value-missing-message="Please enter your name">
+                <label for="name">Name (Required)</label>
+                <input type="text" id="name" name="name" required />
+              </form-group>
+
+              <form-group
+                value-missing-message="Email is required"
+                type-mismatch-message="Please enter a valid email address"
+              >
+                <label for="email">Email (Required)</label>
+                <input type="email" id="email" name="email" required />
+              </form-group>
+
+              <form-group
+                value-missing-message="Phone number is required"
+                pattern-mismatch-message="Please enter a valid phone number (e.g., 123-456-7890)"
+              >
+                <label for="phone">Phone (Pattern: XXX-XXX-XXXX)</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                  required
+                />
+              </form-group>
+
+              <form-group value-missing-message="Please select a country">
+                <label for="country">Country (Required)</label>
+                <select id="country" name="country" required>
+                  <option value="">-- Select a country --</option>
+                  <option value="us">United States</option>
+                  <option value="uk">United Kingdom</option>
+                  <option value="ca">Canada</option>
+                  <option value="au">Australia</option>
+                </select>
+              </form-group>
+            </div>
+
+            <button type="submit" disabled>Submit Form</button>
+            <button type="reset">Reset</button>
+          </form>
+          <div class="success-box" id="basic-success">
+            ✓ Form submitted successfully!
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+    <script>
+      // Ensure submit buttons are disabled by default
+      FormValidation.disableAllSubmitButtons();
+      FormValidation.initializeForm("basic-form", "basic-success");
+    </script>
+  </body>
+</html>

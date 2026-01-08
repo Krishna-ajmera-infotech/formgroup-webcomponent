@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Number Validation - FormGroup Component</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="sidebar">
+        <h3>Form Examples</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="basic-validation.html">Basic Validation</a></li>
+          <li><a href="length-validation.html">Length Validation</a></li>
+          <li>
+            <a href="number-validation.html" class="active"
+              >Number Validation</a
+            >
+          </li>
+          <li><a href="date-validation.html">Date Validation</a></li>
+          <li><a href="password-validation.html">Password Validation</a></li>
+          <li><a href="styled-validation.html">Custom Styling</a></li>
+          <li><a href="api-demo.html">API Demo</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <h1>Number Range Validation (min/max/step)</h1>
+        <div class="info-box">
+          <strong>About:</strong> This form demonstrates number validation
+          including min/max ranges and step increments.
+        </div>
+
+        <div class="demo-section">
+          <form id="number-form">
+            <div class="grid">
+              <form-group
+                range-underflow-message="Age must be at least 18"
+                range-overflow-message="Age cannot exceed 120"
+                value-missing-message="Age is required"
+              >
+                <label for="age">Age (18-120)</label>
+                <input
+                  type="number"
+                  id="age"
+                  name="age"
+                  min="18"
+                  max="120"
+                  required
+                />
+              </form-group>
+
+              <form-group
+                step-mismatch-message="Price must be in increments of 0.01"
+                range-underflow-message="Price must be at least $0.01"
+                range-overflow-message="Price cannot exceed $999.99"
+              >
+                <label for="price"
+                  >Price ($0.01-$999.99, cents precision)</label
+                >
+                <input
+                  type="number"
+                  id="price"
+                  name="price"
+                  min="0.01"
+                  max="999.99"
+                  step="0.01"
+                />
+              </form-group>
+
+              <form-group
+                step-mismatch-message="Quantity must be in multiples of 5"
+              >
+                <label for="quantity">Quantity (multiples of 5)</label>
+                <input
+                  type="number"
+                  id="quantity"
+                  name="quantity"
+                  min="1"
+                  step="5"
+                />
+              </form-group>
+            </div>
+
+            <button type="submit" disabled>Submit</button>
+          </form>
+          <div class="success-box" id="number-success">
+            ✓ Form submitted successfully!
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+    <script>
+      // Ensure submit buttons are disabled by default
+      FormValidation.disableAllSubmitButtons();
+      FormValidation.initializeForm("number-form", "number-success");
+    </script>
+  </body>
+</html>
