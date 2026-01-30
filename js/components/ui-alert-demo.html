@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UI Alert Component Demo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #f5f5f5;
+        padding: 2rem;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+      }
+      .subtitle {
+        color: #6b7280;
+        margin-bottom: 2rem;
+      }
+      .demo-section {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .demo-section h2 {
+        color: #374151;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e5e7eb;
+      }
+      .button-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      button {
+        padding: 0.625rem 1.25rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      button:hover {
+        transform: translateY(-1px);
+      }
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+      .btn-success {
+        background: #10b981;
+        color: white;
+      }
+      .btn-success:hover {
+        background: #059669;
+      }
+      .btn-error {
+        background: #ef4444;
+        color: white;
+      }
+      .btn-error:hover {
+        background: #dc2626;
+      }
+      .btn-warning {
+        background: #f59e0b;
+        color: white;
+      }
+      .btn-warning:hover {
+        background: #d97706;
+      }
+      .btn-secondary {
+        background: #6b7280;
+        color: white;
+      }
+      .btn-secondary:hover {
+        background: #4b5563;
+      }
+      #message-container {
+        min-height: 80px;
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 6px;
+      }
+      .code-block {
+        background: #1f2937;
+        color: #e5e7eb;
+        padding: 1rem;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.8rem;
+        overflow-x: auto;
+        margin-top: 1rem;
+      }
+      .code-block code {
+        color: #a5f3fc;
+      }
+      body.loader-active {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔔 UI Alert Component Demo</h1>
+      <p class="subtitle">
+        A versatile web component for loaders, toasts, and notifications
+      </p>
+
+      <!-- Full Page Loader Section -->
+      <div class="demo-section">
+        <h2>📍 Full Page Loader</h2>
+        <div class="button-group">
+          <button
+            class="btn-primary"
+            onclick="showFullPageLoader(true, 'Loading data...')"
+          >
+            Show Loader
+          </button>
+          <button class="btn-secondary" onclick="showFullPageLoader(false)">
+            Hide Loader
+          </button>
+          <button class="btn-primary" onclick="demoLoaderWithTimeout()">
+            Show for 2 seconds
+          </button>
+        </div>
+        <div class="code-block">
+          <code>showFullPageLoader(true, 'Loading data...');</code><br />
+          <code>showFullPageLoader(false);</code>
+        </div>
+      </div>
+
+      <!-- Toast Messages Section -->
+      <div class="demo-section">
+        <h2>🍞 Toast Messages</h2>
+        <div class="button-group">
+          <button
+            class="btn-success"
+            onclick="
+              showToastMessage({
+                type: 'success',
+                message: 'Operation completed successfully!',
+              })
+            "
+          >
+            Success Toast
+          </button>
+          <button
+            class="btn-error"
+            onclick="
+              showToastMessage({
+                type: 'error',
+                message: 'Something went wrong!',
+                title: 'Error',
+              })
+            "
+          >
+            Error Toast
+          </button>
+          <button
+            class="btn-warning"
+            onclick="
+              showToastMessage({
+                type: 'warning',
+                message: 'Please review your input',
+              })
+            "
+          >
+            Warning Toast
+          </button>
+          <button
+            class="btn-primary"
+            onclick="
+              showToastMessage({
+                type: 'info',
+                message: 'New updates available',
+                title: 'Info',
+              })
+            "
+          >
+            Info Toast
+          </button>
+        </div>
+        <div class="code-block">
+          <code
+            >showToastMessage({ type: 'success', message: 'Saved!', title:
+            'Success' });</code
+          >
+        </div>
+      </div>
+
+      <!-- Validation Notification Section -->
+      <div class="demo-section">
+        <h2>⚠️ Validation Notification</h2>
+        <div class="button-group">
+          <button
+            class="btn-error"
+            onclick="
+              showValidationNotification(
+                'Please fill in all required fields before continuing.',
+              )
+            "
+          >
+            Show Validation Error
+          </button>
+        </div>
+        <div class="code-block">
+          <code
+            >showValidationNotification('Please fill in all required
+            fields');</code
+          >
+        </div>
+      </div>
+
+      <!-- Inline Messages Section -->
+      <div class="demo-section">
+        <h2>📝 Inline Messages</h2>
+        <div class="button-group">
+          <button
+            class="btn-success"
+            onclick="
+              MessageHelper.success(
+                'Your changes have been saved.',
+                '#message-container',
+              )
+            "
+          >
+            Success Message
+          </button>
+          <button
+            class="btn-error"
+            onclick="
+              MessageHelper.error(
+                'Failed to save changes.',
+                '#message-container',
+                { title: 'Error' },
+              )
+            "
+          >
+            Error Message
+          </button>
+          <button
+            class="btn-warning"
+            onclick="
+              MessageHelper.warning(
+                'Your session will expire soon.',
+                '#message-container',
+              )
+            "
+          >
+            Warning Message
+          </button>
+          <button
+            class="btn-primary"
+            onclick="
+              MessageHelper.info(
+                'Click here to learn more.',
+                '#message-container',
+                { title: 'Tip' },
+              )
+            "
+          >
+            Info Message
+          </button>
+        </div>
+        <div id="message-container"></div>
+        <div class="code-block">
+          <code>MessageHelper.success('Saved!', '#message-container');</code
+          ><br />
+          <code
+            >MessageHelper.error('Failed!', '#container', { title: 'Error'
+            });</code
+          >
+        </div>
+      </div>
+    </div>
+
+    <script src="ui-alert.js"></script>
+    <script>
+      function demoLoaderWithTimeout() {
+        showFullPageLoader(true, "Please wait...");
+        setTimeout(() => showFullPageLoader(false), 2000);
+      }
+    </script>
+  </body>
+</html>
