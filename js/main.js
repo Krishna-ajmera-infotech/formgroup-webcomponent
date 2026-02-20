@@ -169,7 +169,8 @@ class FormGroup extends HTMLElement {
             'step-mismatch-message',
             'bad-input-message',
             'password-validation-mode',
-            'confirm-password-for'
+            'confirm-password-for',
+            'error-message'
         ];
     }
 
@@ -700,9 +701,41 @@ class FormGroup extends HTMLElement {
      * @param {string} oldValue - Previous value
      * @param {string} newValue - New value
      */
-    attributeChangedCallback(_name, oldValue, newValue) {
-        if (oldValue !== newValue && this.hasAttribute('show-error')) {
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+
+        // Handle immediate error message display
+        if (name === 'error-message') {
+            this.#handleErrorMessageAttribute(newValue);
+            return;
+        }
+
+        // Re-validate if currently showing an error
+        if (this.hasAttribute('show-error')) {
             this.#showError();
+        }
+    }
+
+    /**
+     * Handles the error-message attribute changes.
+     * @param {string|null} message - The error message or null/empty if attribute removed
+     * @private
+     */
+    #handleErrorMessageAttribute(message) {
+        // Treat empty string, null, or undefined as clearing the error
+        if (message && message.trim() !== '') {
+            this.#errorMessage.textContent = message;
+            this.setAttribute('show-error', '');
+            this.#hasUserInteracted = true;
+
+            // Dispatch event for consistency
+            this.dispatchEvent(new CustomEvent('validation-error', {
+                detail: { message, isAttributeMessage: true },
+                bubbles: true,
+                composed: true
+            }));
+        } else {
+            this.#clearError();
         }
     }
 
@@ -893,6 +926,9 @@ class FormGroup extends HTMLElement {
         if (this.#passwordValidationMode === 'group') {
             this.#updatePasswordRequirements();
         }
+
+        // Clear attribute-based errors
+        this.clearErrorAttribute();
 
         // Also remove password match status if present
         this.#removePasswordMatchStatus();
